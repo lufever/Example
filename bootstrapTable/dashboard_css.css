@@ -1,0 +1,260 @@
+@charset "utf-8";
+
+body, div,h1, .h1, h2, .h2, h3, .h3, h4, .h4, h5, .h5, h6, .h6, p, .navbar, .brand, .btn-simple, .sidebar .nav p , .alert, a, .td-name, td, button.close,button,span{
+    font-family:"微软雅黑 light",'Roboto', 'Helvetica', 'Arial', sans-serif
+}
+		a{
+			text-align: center;
+			padding-top: 10px;
+		}
+		
+		.user li{
+			list-style-type:none;
+		}
+		
+	#loginImage {
+    width: 740px;
+	}
+	@media (max-width: 767px) {
+		#loginImage {
+		width: 100%;
+		}/*
+		 .sidebar .nav > li > a,
+		  .bootstrap-navbar .nav > li > a {
+			padding-bottom: 15px;
+			padding-top: 15px;
+			font-size: 14px;
+		  }*/
+	}
+
+	
+
+
+.main-panel{
+	background:#e4e4e4
+}
+
+
+.userAdmin{
+	border-top:1px solid rgba(255, 255, 255, 0.2);
+}
+	
+.role {
+	padding: 8px 14px;
+	text-align:center;
+}
+
+
+ 
+		.content[data-role=page].active {
+				    display: block;
+
+		}
+		
+		.content[data-role=page] {
+				    display: none;
+		}
+		
+
+		
+		.sweet-content p{text-align:left}
+		.page {
+		    transform: translateY(1080px);
+		    transition: transform 0 linear;
+		    display: none;
+		    opacity: 0;
+		    font-size: 14px;
+		}
+		.page.active {
+		    transform: translateY(0px);
+		    transition: all 0.3s ease-out;
+		    display: block;
+		    opacity: 1;
+		}
+	.usertype ul {padding-left:0}
+	.usertype ul li{
+    float: left;
+    list-style: none;
+    padding: 8px 25px;
+    margin: 3px 16px 3px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+	cursor:pointer;
+	min-width:108px;
+	text-align:center;
+	}
+	.usertype ul li.active{
+    border: 1px solid rgb(48,189,231);
+	color:rgb(48,189,231);
+	}
+
+		.xdjsr{
+			line-height: 40px;
+			font-size: 12pt;
+			text-align: right;
+		}
+		.xdjsl{
+			line-height: 40px;
+			font-size: 12pt;
+			text-align: left;
+		}
+		.indexintro  .header{
+			padding:10px 0;color:#fff; 
+			
+		}
+		.indexintro  h4.title{
+			color:#fff; 
+			
+		}
+		
+		
+		h3.smallheader{padding-top:15px}
+		h3.smallheader+p{padding-bottom:15px}
+		@media (max-width:350px){
+			h3.smallheader{
+				font-size:20px
+			}
+			
+		}
+		
+		.indexintro .row{	margin-left:0;margin-right:0}
+		/*.indexintro .col-sm-12:nth-child(2){	padding-left:15px;padding-right:15px}*/
+		.indexintro .col-md-4{	padding-left:5px;padding-right:5px}
+		#index_page>.card .header{padding-bottom:15px}
+		.indexintro .index-ele button,.indexintro .index-ele button:focus,.indexintro .index-ele button:active{			color: rgb(10,204,154);		border:1px solid rgb(10,204,154); }
+		.indexintro .index-simple button,.indexintro .index-simple button:focus,.indexintro .index-simple button:active{	color: rgb(61,209,239);	border:1px solid rgb(61,209,239);}
+		.indexintro .index-advance button,.indexintro .index-advance button:focus,.indexintro .index-advance button:active{ color: rgb(0,153,255);			border:1px solid rgb(0,153,255);}
+		.indexintro .index-ele .header{
+				background:rgb(10,204,154);
+		}
+		
+		.indexintro .index-simple .header{
+			background: rgb(61,209,239);	
+		}
+		.indexintro .index-advance .header{
+			background:rgb(0,153,255);				
+		}
+		.indexintro ul {margin:0;padding:0 0 0 15px;color:#ddd;font-size:15px;color:#FF00FF;list-style-type: disc }
+		.index-ele ul {
+			color: rgb(10,204,154);		
+		}
+
+		.index-simple ul li {
+		color: rgb(61,209,239);	
+		}
+		.index-advance ul li {
+			color: rgb(0,153,255);		
+		}
+		#eleinput_page .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{background:rgb(10,204,154)!important;}
+		#simpleinput_page .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{		background: rgb(61,209,239)!important;	}
+		#advanceinput_page .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{background:rgb(0,153,255)!important;		}
+		.indexintro .content{
+			height:180px;
+			padding-left:20px;padding-right:20px; 			
+		}
+		.sidebar .nav li {
+		  font-size: 13pt;
+		  font-weight: normal;
+		text-align:left;
+		height:40px;
+		}
+		.sidebar .nav li p {
+		  font-size: 14px;
+			text-align:left;
+					  font-weight: normal;
+
+		}		
+		@media (min-width: 993px){
+		.sidebar .nav  li {
+		  font-size: 13pt;
+		  font-weight: normal;
+		text-align:left;
+		height:50px;
+		}
+		
+		.sidebar .nav  li p {
+					  font-weight: normal;
+			text-align:left;
+			font-size: 16px;
+		}
+		}
+
+		@media (max-width: 1200px) and (min-width: 993px){
+		.col-normal-12{
+			width:100%;
+			margin-left:0
+		}
+		.col-md-8 {
+			width:83.33333333%;
+		}
+		.col-md-offset-2{
+			margin-left:8.33333333%
+		}
+		}
+		
+
+		.sep {
+			   line-height: 36px;
+		}
+
+
+		#log-table > tbody > tr > td:first-child,#index-log-table > tbody > tr > td:first-child{			
+			white-space:nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.bootstrap-table .table.table-striped > tbody > tr {
+			cursor:pointer;			
+		}
+ 
+		.bootstrap-table .table.table-striped > tbody > tr > td, .bootstrap-table .table.table-striped > thead > tr > th {
+		border-bottom: 1px solid #ccc;}
+		.bootstrap-table .table.table-striped > thead > tr > th {
+		font-size:14px;}
+		.card .form-group label{
+			font-size:14px;
+			padding-top: 9px !important;
+			text-transform:none;
+			text-transform: none;
+		}
+ 
+
+.navbar-fixed-top {
+    position: static;	
+}
+
+
+#topEmailTip{margin:0 auto;margin-top:10px;}
+
+
+.advanceEmailInput{height:32px}
+@media (min-width: 992px){
+.advanceEmailInput{width:300px;display:inline-block;margin-right:15px;height:32px}
+}
+@media (max-width: 992px){
+.main-panel{transform:none;-webkit-transform:none}	
+.navbar-fixed-top {
+	background:rgba(255,255,255,0.7);
+	width:100%;
+    position: fixed;
+	margin-left:0;
+}
+.content[data-role=page].active{
+ margin-top:60px;
+}
+
+#topEmailTip{margin-top:70px;}
+#topEmailTip.hide~.content[data-role=page].active{
+ margin-top:60px;
+}
+#topEmailTip~.content[data-role=page].active{
+ margin-top:10px;
+}
+
+.hchart{
+	width:100%;
+}
+#log-table,#index-log-table{min-width:500px}
+}
+#manageToolbar,#logToolbar{ padding:8px 15px}
+.irr .my_table_title{padding:10px 0 10px 0}
