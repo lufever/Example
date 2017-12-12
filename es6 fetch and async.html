@@ -1,0 +1,117 @@
+﻿ <link href="https://cdn.bootcss.com/bootstrap/4.0.0-beta/css/bootstrap.css" rel="stylesheet">
+ <link href="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.css" rel="stylesheet">
+ <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-shim.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-shim.min.js"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.34.2/es6-sham.min.js"></script>
+ <script src="https://wzrd.in/standalone/es7-shim@latest"></script> 
+ <!-- Automatically provides/replaces `Promise` if missing or broken. -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script> 
+
+<!-- Minified version of `es6-promise-auto` below. -->
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.min.js"></script> 
+ <body>
+ <style>.fixed-table-container{border:none} </style>
+ 
+<table id="table" class="table table-striped"></table>
+ 
+</body>
+ <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/bootstrap-table.js"></script>
+ <script src="https://cdn.bootcss.com/bootstrap-table/1.11.1/locale/bootstrap-table-zh-CN.js"></script>
+   <!-- <script src="https://cdn.bootcss.com/vue/2.4.2/vue.js"></script> -->
+ <script> 
+(function(exports) {
+    //占位符替换{0}
+    exports.format = function(){
+        var args = Array.prototype.slice.call(arguments),
+            sourceStr = args.shift();
+
+        function execReplace(text,replacement,index){
+            return text.replace(new RegExp("\\{"+index+"\\}",'g'),replacement);
+        }
+
+        return args.reduce(execReplace,sourceStr);
+    }
+})(window.utils = window.utils || {});
+
+//************* TEST   START *************
+//所有页面都生效，仅供测试时请求旧的api使用
+// var token;
+// $.ajaxSetup({async: false});
+// $.get("http://192.168.1.212:801/d2.php", "html").done(function (data) { token = `${data.match(/token&quot;:&quot;(\S*)==/)[1]}==`; });
+ 
+// $.ajaxSetup({
+//     async: true,
+//     crossDomain: true,
+//     beforeSend: function () {         
+//         this.url = `http://192.168.1.212:801/data.php?referurl=demo.wdms.windmagics.com/${this.url}&token=${token}`;
+//     },
+//     error: function (xhr, msg) {
+//         console.log(this.url,xhr, msg);
+//     }
+// });
+
+
+
+var originalfetch= window.fetch;
+
+window.fetch= function() { 
+  arguments[0] = `http://192.168.1.212:801/data.php?referurl=demo.wdms.windmagics.com/${arguments[0]}&token=${token}`
+  return originalfetch.apply(this,arguments).then(response => {return response.json() });
+}
+
+ 
+//************* TEST   END *************
+api="/api/windsites/all?oid=1"
+var apiMap={
+  Province:"/api/regionalizations/provinces",
+  City:"/api/regionalizations/province/{0}/cities",
+  County:"/api/regionalizations/city/{0}/counties"
+ } 
+
+async function regionFormatter(parentRegionCode,key){
+    parentRegionCode=parentRegionCode||"";   
+    let url = utils.format(apiMap[key],parentRegionCode)  
+    let json = await fetch(url) 
+    let region={}  ; 
+    json.map(j=> region[j.RegCode]=j.RegName) ;
+    key=key.toLowerCase()
+    $(`span[data-${key}]`).map((i,ele) => { 
+        let regCode=$(ele).data(key);
+        let html=region[regCode];
+        $(ele).html(html) 
+    })
+}
+ 
+async function makeTable(){
+  let json = await fetch(api)
+  let data=json.Rows;
+  let keys=Object.keys(apiMap);
+  let columns = Object.keys(data[0]).map( k=>{ 
+      let j=({title:k,field:k}); 
+        if (keys.indexOf(k)!==-1) 
+        j.formatter= (data=> {k=k.toLowerCase() ;return `<span data-${k}=${data}></span>`})  ;
+        return j})
+  $("#table").bootstrapTable({data,columns});
+  let provinceList=[...new Set(data.map(item=>{return item.Province}))] 
+  let cityList=[...new Set(data.map(item=>{return item.City}))]  
+   regionFormatter("","Province") 
+   cityList.map(province=>{  regionFormatter(province,"County")  })
+   provinceList.map(province=>{  regionFormatter(province,"City")  })
+ }
+ 
+async function main(){
+    let data = await originalfetch("http://192.168.1.212:801/d2.php").then(response=> {return response.text()})
+    token = data.match(/token&quot;:&quot;(\S*)==/)[1]+"==";  
+    makeTable()
+} 
+main()
+
+
+ 
+
+</script> 
