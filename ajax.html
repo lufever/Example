@@ -29,30 +29,20 @@
 //所有页面都生效，仅供测试时请求旧的api使用
 var token;
 $.ajaxSetup({async: false});
-$.get("http://192.168.1.212:801/d2.php", "html").done(function (data) { token = `${data.match(/token&quot;:&quot;(\S*)==/)[1]}==`; });
+$.get("http://192.168.1.212:801/token.php", "html").done(function (data) { token = `${data.match(/token&quot;:&quot;(\S*)==/)[1]}==`; });
  
 $.ajaxSetup({
     async: true,
     crossDomain: true,
     beforeSend: function () {         
-        this.url = `http://192.168.1.212:801/data.php?referurl=demo.wdms.windmagics.com/${this.url}&token=${token}`;
+	console.log(`http://192.168.1.212:801/data.php?referurl=http://demo.wdms.windmagics.com/${this.url}&token=${token}`)
+        this.url = `http://192.168.1.212:801/data.php?referurl=http://demo.wdms.windmagics.com/${this.url}&token=${token}`;
     },
     error: function (xhr, msg) {
         console.log(this.url,xhr, msg);
     }
 });
 
-var originalfetch= window.fetch;
-window.fetch= function() {
- 
- 
-    // var defaultSetting={ 
-    //     type:'post', 
-    // };  
-    // $.extend(defaultSetting,arguments); 
-  arguments[0] = `http://192.168.1.212:801/data.php?referurl=demo.wdms.windmagics.com/${arguments[0]}&token=${token}`
-  return originalfetch.apply(this,arguments).then(response => {return response.json() });
-}
 
  
 //************* TEST   END *************
@@ -73,7 +63,8 @@ var apiMap={
  function regionFormatter(parentRegionCode,key){
   parentRegionCode=parentRegionCode||"";   
   var url = utils.format(apiMap[key],parentRegionCode)  
-  $.getJSON(url).done(data=> {
+  $.ajax(url).done(data=> {
+  console.log(data)
     var region={}  ; 
     data.map(j=> region[j.RegCode]=j.RegName) ;   
     key=  key.toLowerCase()

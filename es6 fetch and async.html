@@ -28,20 +28,7 @@
 
 //************* TEST   START *************
 //所有页面都生效，仅供测试时请求旧的api使用
-// var token;
-// $.ajaxSetup({async: false});
-// $.get("http://192.168.1.212:801/d2.php", "html").done(function (data) { token = `${data.match(/token&quot;:&quot;(\S*)==/)[1]}==`; });
- 
-// $.ajaxSetup({
-//     async: true,
-//     crossDomain: true,
-//     beforeSend: function () {         
-//         this.url = `http://192.168.1.212:801/data.php?referurl=demo.wdms.windmagics.com/${this.url}&token=${token}`;
-//     },
-//     error: function (xhr, msg) {
-//         console.log(this.url,xhr, msg);
-//     }
-// });
+
 
 
 
@@ -93,7 +80,7 @@ async function makeTable(){
  }
  
 async function main(){
-    let data = await originalfetch("http://192.168.1.212:801/d2.php").then(response=> {return response.text()})
+    let data = await originalfetch("http://192.168.1.212:801/token.php").then(response=> {return response.text()})
     token = data.match(/token&quot;:&quot;(\S*)==/)[1]+"==";  
     makeTable()
 } 

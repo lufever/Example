@@ -33,6 +33,6 @@ print_r($res);
 
 
 else{
-	echo "{\"error\":\"referurl parameter should not be empty! like http://localhost:8023/data.php?referurl=http://192.168.1.212:8080/api/daterange"}";	
+	echo "{\"error\":\"referurl parameter should not be empty! like http://localhost:8023/data.php?referurl=http://192.168.1.212:8080/api/daterange\"}";	
 }
 ?>
