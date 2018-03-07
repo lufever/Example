@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>风资源分级</title>
+    <style>
+    html,
+    body,
+    #container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src='http://webapi.amap.com/maps?v=1.4.4&key=86073996544b3a8b4f4a37f44d67d6a9'></script>
+    <!-- UI组件库 1.0 -->
+    <script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <script type="text/javascript">
+    //创建地图
+ var map = new AMap.Map('container', {
+        cursor: 'default',
+        zoom: 4
+    });
+	
+	
+ function getAllRings(feature) {
+ 
+        var coords = feature.geometry.coordinates,
+            rings = [];
+
+        for (var i = 0, len = coords.length; i < len; i++) {
+            rings.push(coords[i][0]);
+        }
+
+        return rings;
+    }
+
+    function getLongestRing(feature) {
+        var rings = getAllRings(feature);
+
+        rings.sort(function(a, b) {
+            return b.length - a.length;
+        });
+
+        return rings[0];
+    }
+	
+const FillOpacity=0.65
+const LevelOneColor='purple';
+const LevelTwoColor='green'; 
+const LevelThreeColor='red'; 
+const LevelFourColor='grey'; 
+
+const CountryCode=100000	//全国		
+ 
+const LevelFourExceptProvince = [
+150000,//内蒙古
+620000,//甘肃
+650000,//新疆
+640000//宁夏
+]; 
+const LevelFourExceptCity = [
+220800,//白城
+220700,//松原
+230300,//鸡西
+230500,//双鸭山
+230900,//七台河
+231200,//绥化市
+230700,//伊春
+232700,//大兴安岭,
+130700,//张家口
+130800,//承德
+]; 
+
+const NeimengguAcode= 150000;  
+const XinjiangAcode = 650000;  
+const GansuAcode = 620000;  
+
+const LevelOneExceptCityNeimenggu = [
+150400, //赤峰
+150500, //通辽
+152200,//兴安盟
+150700,//呼伦贝尔		 
+];
+
+const	LevelOneContainCityXinjiang=[
+650100,//乌鲁木齐
+654000,//伊犁哈萨克族
+650200, //克拉玛依市
+659001,  //石河子 
+]; 
+const LevelTwoContainCityGansu=[
+620900, //酒泉
+620200 //嘉峪关
+]
+const LevelTwoContainCity=[
+130700,//张家口
+130800,//承德
+150400, //赤峰
+150500, //通辽
+152200,//兴安盟
+150700,//呼伦贝尔
+];
+const LevelThreeContainCity=[
+220800,//白城
+220700,//松原
+230300,//鸡西
+230500,//双鸭山
+230900,//七台河
+231200,//绥化市
+230700,//伊春
+232700,//大兴安岭
+640000//宁夏
+];
+
+const  LevelThreeExceptCityGansu =  LevelTwoContainCityGansu
+const   LevelThreeExceptCityXinjiang = LevelOneContainCityXinjiang
+			
+	 
+
+    AMapUI.loadUI(['geo/DistrictExplorer'], function(D) {
+
+    
+
+
+	
+   
+ 
+        //创建一个districtExplorer实例
+        var de = new D({
+            map: map
+        });
+				  		//============一类资源区==============
+		
+		
+		de.loadAreaNode(NeimengguAcode, function(error, areaNode) {
+
+  
+			var path=[]
+ 
+			areaNode.getSubFeatures().map(feature=>
+			{
+			  if (LevelOneExceptCityNeimenggu.indexOf(feature.properties.adcode)==-1)
+						
+															//逐个放置需要镂空的省级区域
+									path.push.apply(path, getAllRings(feature));
+										
+
+		   })
+  
+          //绘制带环多边形
+                //http://lbs.amap.com/api/javascript-api/reference/overlay#Polygon
+                var polygon = new AMap.Polygon({
+                    bubble: true,
+                    lineJoin: 'round',
+                    strokeColor: 'red', //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 1, //线宽
+                    fillColor: LevelOneColor, //填充色
+                    fillOpacity: FillOpacity, //填充透明度
+                    map: map,
+                    path: path
+                });
+
+     
+        });
+		
+		
+		
+	  
+		
+ 
+			de.loadAreaNode( XinjiangAcode,		function (error, areaNode) {
+
+ 
+
+ 
+		   
+			var path=[]
+ 
+			areaNode.getSubFeatures().map(feature=>
+			{
+			  if (LevelOneContainCityXinjiang.indexOf(feature.properties.adcode)!=-1)
+						
+															//逐个放置需要镂空的省级区域
+									path.push.apply(path, getAllRings(feature));
+										
+
+		   })
+
+                //绘制带环多边形
+                //http://lbs.amap.com/api/javascript-api/reference/overlay#Polygon
+                var polygon = new AMap.Polygon({
+                    bubble: true,
+                    lineJoin: 'round',
+                    strokeColor: 'red', //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 1, //线宽
+                    fillColor: LevelOneColor, //填充色
+                    fillOpacity: FillOpacity, //填充透明度
+                    map: map,
+                    path: path
+                });
+            }
+	);
+		  		//============二类资源区==============
+		  	de.loadMultiAreaNodes(LevelTwoContainCity,function (error, areaNodes){
+             for (var i = 0, len = areaNodes.length; i < len; i++) {    
+                areaNode=areaNodes[i];
+	 
+              de.renderParentFeature(areaNode, {   
+                strokeWeight: 1, //线宽
+				strokeColor: 'red', //线颜色
+                fillColor:LevelTwoColor, //填充色
+				 fillOpacity:FillOpacity, 
+            });
+            }     
+        });	
+		  	 de.loadAreaNode(GansuAcode, function(error, areaNode) {
+
+  
+			var path=[]
+ 
+			areaNode.getSubFeatures().map(feature=>
+			{
+			  if (LevelTwoContainCityGansu.indexOf(feature.properties.adcode)!=-1)
+						
+															//逐个放置需要镂空的省级区域
+									path.push.apply(path, getAllRings(feature));
+										
+
+		   })
+  
+		      //绘制带环多边形
+                //http://lbs.amap.com/api/javascript-api/reference/overlay#Polygon
+                var polygon = new AMap.Polygon({
+                    bubble: true,
+                    lineJoin: 'round',
+                    strokeColor: 'red', //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 1, //线宽
+                    fillColor: LevelTwoColor, //填充色
+                    fillOpacity: FillOpacity, //填充透明度
+                    map: map,
+                    path: path
+                });
+
+     
+        });
+		  
+	
+	
+		//============三类资源区==============
+		
+		 	 	de.loadMultiAreaNodes(LevelThreeContainCity,function (error, areaNodes){
+             for (var i = 0, len = areaNodes.length; i < len; i++) {    
+                areaNode=areaNodes[i];
+              de.renderParentFeature(areaNode, {   
+                strokeWeight: 1, //线宽
+                fillColor: LevelThreeColor, //填充色
+				fillOpacity: FillOpacity, //填充透明度
+            });
+            }     
+        });		
+
+ 	 de.loadAreaNode(GansuAcode, function(error, areaNode) {
+
+  
+			var path=[]
+ 
+			areaNode.getSubFeatures().map(feature=>
+			{
+			  if (LevelThreeExceptCityGansu.indexOf(feature.properties.adcode)==-1)
+						
+															//逐个放置需要镂空的省级区域
+									path.push.apply(path, getAllRings(feature));
+										
+
+		   })
+  
+          //绘制带环多边形
+                //http://lbs.amap.com/api/javascript-api/reference/overlay#Polygon
+                var polygon = new AMap.Polygon({
+                    bubble: true,
+                    lineJoin: 'round',
+                    strokeColor: 'red', //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 1, //线宽
+                    fillColor: LevelThreeColor, //填充色
+                    fillOpacity: FillOpacity, //填充透明度
+                    map: map,
+                    path: path
+                });
+
+     
+        });
+
+	
+				 
+		 			de.loadAreaNode( XinjiangAcode,		function (error, areaNode) {
+
+ 
+
+ 
+		   
+			var path=[]
+ 
+			areaNode.getSubFeatures().map(feature=>
+			{
+			  if (LevelThreeExceptCityXinjiang.indexOf(feature.properties.adcode)==-1)
+						
+															//逐个放置需要镂空的省级区域
+									path.push.apply(path, getAllRings(feature));
+										
+
+		   })
+
+                //绘制带环多边形
+                //http://lbs.amap.com/api/javascript-api/reference/overlay#Polygon
+                var polygon = new AMap.Polygon({
+                    bubble: true,
+                    lineJoin: 'round',
+                    strokeColor: 'red', //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 1, //线宽
+                    fillColor: LevelThreeColor, //填充色
+                    fillOpacity: FillOpacity, //填充透明度
+                    map: map,
+                    path: path
+                });
+            }
+	);
+		
+
+	  
+	   
+			
+			
+			  		//============四类资源区==============
+		
+
+		
+
+		
+			de.loadMultiAreaNodes(     [CountryCode].concat(LevelFourExceptCity),		function (error, areaNodes) {
+
+                var countryNode = areaNodes[0],
+                    cityNodes = areaNodes.slice(1);
+
+                var path = [];
+
+                //首先放置背景区域，这里是大陆的边界
+                path.push(getLongestRing(countryNode.getParentFeature()));
+
+		        for (var i = 0, len = LevelFourExceptProvince.length; i < len; i++) {
+                    //逐个放置需要镂空的省级区域
+                    path.push.apply(path, getAllRings(countryNode.getSubFeatureByAdcode(LevelFourExceptProvince[i])));
+                }
+
+                for (var i = 0, len = cityNodes.length; i < len; i++) {
+                    //逐个放置需要镂空的市级区域
+                    path.push.apply(path, getAllRings(cityNodes[i].getParentFeature()));
+                }
+
+
+                //绘制带环多边形
+                //http://lbs.amap.com/api/javascript-api/reference/overlay#Polygon
+                var polygon = new AMap.Polygon({
+                    bubble: true,
+                    lineJoin: 'round',
+                    strokeColor: 'red', //线颜色
+                    strokeOpacity: 1, //线透明度
+                    strokeWeight: 1, //线宽
+                    fillColor: LevelFourColor, //填充色
+                    fillOpacity: 0.65, //填充透明度
+                    map: map,
+                    path: path
+                });
+            }
+	);
+
+		
+	    });
+    </script>
+</body>
+
+</html>

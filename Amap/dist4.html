@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>风资源分级</title>
+    <style>
+    html,
+    body,
+    #container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src='http://webapi.amap.com/maps?v=1.4.4&key=86073996544b3a8b4f4a37f44d67d6a9'></script>
+    <!-- UI组件库 1.0 -->
+    <script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <script type="text/javascript">
+
+const LevelOneColor='purple';
+const LevelTwoColor='green'; 
+const LevelThreeColor='red'; 
+const LevelFourColor='grey'; 
+
+
+const RenderCfg= {  
+strokeWeight:1, 
+strokeColor:'grey',
+fillOpacity :0.65,
+bubble:true,  
+lineJoin: 'round'
+}
+
+const CountryCode=100000	//全国		
+ 
+
+const NeimengguAcode= 150000;  //内蒙古
+const XinjiangAcode = 650000;  //新疆
+const GansuAcode = 620000;  //甘肃
+const HebeiAcode = 130000;	//河北
+const JilinAcode = 220000; //吉林
+const HeilongjiangAcode = 230000; //黑龙江
+const NingxiaAcode = 640000; //宁夏
+
+const LevelOneExceptCityNeimenggu = [
+150400, //赤峰
+150500, //通辽
+152200,//兴安盟
+150700,//呼伦贝尔		 
+];
+const	LevelOneContainCityXinjiang=[
+650100,//乌鲁木齐
+654000,//伊犁哈萨克族
+650200, //克拉玛依市
+659001,  //石河子 
+]; 
+const LevelTwoContainCityGansu=[
+620900, //酒泉
+620200 //嘉峪关
+]
+
+const LevelTwoContainCity=[
+130700,//张家口
+130800,//承德 
+].concat(LevelOneExceptCityNeimenggu);
+
+const LevelThreeContainCity=[
+220800,//白城
+220700,//松原
+230300,//鸡西
+230500,//双鸭山
+230900,//七台河
+231200,//绥化市
+230700,//伊春
+232700,//大兴安岭
+640000//宁夏
+];
+
+const  LevelThreeExceptCity =  LevelTwoContainCityGansu.concat(LevelOneContainCityXinjiang)
+ 
+const LevelFourExceptProvince = [
+ NeimengguAcode,
+ XinjiangAcode ,
+ GansuAcode ,
+ HebeiAcode ,
+ JilinAcode,
+ HeilongjiangAcode,
+ NingxiaAcode
+]; 
+
+const LevelFourExceptCity = LevelThreeContainCity.concat(LevelTwoContainCity).concat(LevelTwoContainCityGansu).concat(LevelOneContainCityXinjiang)
+
+	
+function  getPath( areaNode, adcodes, contain=true){	 
+	 var subFeatures = areaNode.getSubFeatures();
+	 filterFeature=contain?subFeatures.filter(feature=> adcodes.indexOf(feature.properties.adcode)!= -1 )
+		:subFeatures.filter(feature=> adcodes.indexOf(feature.properties.adcode) == -1 ); 
+	return filterFeature.map(feature=>feature.geometry.coordinates.map(coord=>coord[0])).reduce((pre,next)=>pre.concat(next))
+ 
+}
+
+
+
+		//创建地图
+	 var map = new AMap.Map('container', {
+			cursor: 'default',
+			zoom: 4
+		});
+	
+
+	AMapUI.loadUI(['geo/DistrictExplorer'], function (D) {
+	
+			function  renderConditionArea(acode,acodeArray,polygonRenderCfg,contain=true){	
+					 de.loadAreaNode(acode, function (error, areaNode) {     
+					var path=getPath(areaNode, acodeArray,contain )	
+					var cfg = Object.assign(polygonRenderCfg, RenderCfg);
+					cfg.path=path
+					var polygon = new AMap.Polygon(cfg);            
+				});		
+			}
+			
+			function  renderAllArea(acodeArray,areaNodeRenderCfg){
+			   de.loadMultiAreaNodes(acodeArray, function (error, areaNodes) {			
+				areaNodes.map(areaNode=> de.renderParentFeature(areaNode, areaNodeRenderCfg))                 
+				});	
+			}
+			
+            //创建一个districtExplorer实例
+            var de = new D({  map   });
+            //============一类资源区==============
+			const LevelOnePolygonRenderCfg=	{ map , fillColor:LevelOneColor}			
+			renderConditionArea(NeimengguAcode,LevelOneExceptCityNeimenggu,LevelOnePolygonRenderCfg,false)         
+			renderConditionArea(XinjiangAcode,LevelOneContainCityXinjiang,LevelOnePolygonRenderCfg)    
+			
+             //============二类资源区==============
+ 			const LevelTwoPolygonRenderCfg=	{ map , fillColor:LevelTwoColor}			
+			const LevelTwoAreaNodeRenderCfg = Object.assign({fillColor:LevelTwoColor}, RenderCfg);	
+			
+			renderAllArea(LevelTwoContainCity,LevelTwoAreaNodeRenderCfg)			
+			renderConditionArea(GansuAcode,LevelTwoContainCityGansu,LevelTwoPolygonRenderCfg)       
+
+			//============三类资源区==============
+			const LevelThreePolygonRenderCfg =	{ map , fillColor:LevelThreeColor}		
+			const LevelThreeAreaNodeRenderCfg = Object.assign({fillColor:LevelThreeColor}, RenderCfg);
+ 		 
+			renderAllArea(LevelThreeContainCity,LevelThreeAreaNodeRenderCfg)
+			  
+			renderConditionArea(GansuAcode,LevelThreeExceptCity,LevelThreePolygonRenderCfg,false)
+			renderConditionArea(XinjiangAcode,LevelThreeExceptCity,LevelThreePolygonRenderCfg,false)
+			
+            //============四类资源区==============
+			const LevelFourPolygonRenderCfg =	{ map , fillColor:LevelFourColor}	
+	
+			renderConditionArea(CountryCode,LevelFourExceptProvince,LevelFourPolygonRenderCfg,false)			
+			renderConditionArea(HebeiAcode,LevelFourExceptCity,LevelFourPolygonRenderCfg,false)
+			renderConditionArea(JilinAcode,LevelFourExceptCity,LevelFourPolygonRenderCfg,false)
+			renderConditionArea(HeilongjiangAcode,LevelFourExceptCity,LevelFourPolygonRenderCfg,false)
+
+        });
+    </script>
+</body>
+
+</html>

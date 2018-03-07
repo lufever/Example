@@ -1,0 +1,201 @@
+<!-- 重点：loadAreaNode -->
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 原始地址：//webapi.amap.com/ui/1.0/ui/geo/DistrictExplorer/examples/multi-load.html -->
+    <base href="http://webapi.amap.com/ui/1.0/ui/geo/DistrictExplorer/examples/" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>多区域加载</title>
+    <style>
+    html,
+    body,
+    #container {
+        width: 100%;
+        height: 100%;
+        margin: 0px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script type="text/javascript" src='//webapi.amap.com/maps?v=1.4.4&key=您申请的key值'></script>
+    <!-- UI组件库 1.0 -->
+    <script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+    <script type="text/javascript">
+    //创建地图
+    var map = new AMap.Map('container', {
+        cursor: 'default',
+        zoom: 4
+    });
+ 
+    AMapUI.loadUI(['geo/DistrictExplorer'], function(DistrictExplorer) {
+        //创建一个实例
+        var districtExplorer = new DistrictExplorer({ map});
+
+        var adcodes =[150100,
+150200,
+150300,
+150600,
+150800,
+150900,
+152500,
+152900,
+650100,
+654000,
+650200,
+   ];
+        var adcodes1 = [130700,
+130800,
+150400,
+150500,
+152200,
+150700,
+ 
+620900];
+		        var adcodes2 =   [220800,
+220700,
+230300,
+230500,
+230900,
+231200,
+230700,
+232700,
+620100,
+620300,
+620400,
+620500,
+620600,
+620700,
+620800,
+621000,
+621100,
+621200,
+622900,
+623000,
+650400,
+650500,
+652300,
+652700,
+652800,
+652900,
+653000,
+653100,
+653200,
+654200,
+654300,
+ 
+640000];
+				        var adcodes3 = [110000,
+120000,
+130100,
+130200,
+130300,
+130400,
+130500,
+130600,
+130900,
+131000,
+131100,
+140000,
+210000,
+220100,
+220200,
+220300,
+220400,
+220500,
+220600,
+222400,
+230100,
+230200,
+230400,
+230600,
+230800,
+231000,
+231100 ,
+310000,
+320000,
+330000,
+340000,
+350000,
+360000,
+370000,
+410000,
+420000,
+430000,
+440000,
+450000,
+460000,
+500000,
+510000,
+520000,
+530000,
+540000,
+610000,
+630000,
+ 
+810000,
+820000];
+        districtExplorer.loadMultiAreaNodes(adcodes, function(error, areaNodes) {
+             for (var i = 0, len = areaNodes.length; i < len; i++) {    
+                areaNode=areaNodes[i];
+              districtExplorer.renderParentFeature(areaNode, {   
+                strokeWeight: 1, //线宽
+                fillColor: "purple", //填充色
+            });
+            }     
+        });
+		
+		
+		districtExplorer.loadMultiAreaNodes(adcodes1, function(error, areaNodes) {
+				 for (var i = 0, len = areaNodes.length; i < len; i++) {    
+					areaNode=areaNodes[i];
+				  districtExplorer.renderParentFeature(areaNode, {   
+					strokeWeight: 1, //线宽
+					fillColor: "blue", //填充色
+				});
+				}     
+			});
+		
+			   districtExplorer.loadMultiAreaNodes(adcodes2, function(error, areaNodes) {
+	 for (var i = 0, len = areaNodes.length; i < len; i++) {    
+		areaNode=areaNodes[i];
+	  districtExplorer.renderParentFeature(areaNode, {   
+		strokeWeight: 1, //线宽
+		fillColor: "red", //填充色
+	});
+	}     
+});
+					   districtExplorer.loadMultiAreaNodes(adcodes3, function(error, areaNodes) {
+	 for (var i = 0, len = areaNodes.length; i < len; i++) {    
+		areaNode=areaNodes[i];
+	  districtExplorer.renderParentFeature(areaNode, {   
+		strokeWeight: 1, //线宽
+		fillColor: "orange", //填充色
+	});
+	}     
+});
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+    });
+    </script>
+</body>
+
+</html>
